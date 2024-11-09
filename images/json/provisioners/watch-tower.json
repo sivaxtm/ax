@@ -103,7 +103,7 @@
         "git clone https://github.com/jim3ma/crunch.git /home/op/recon/crunch",
         "echo 'Installing crunch'",
         "/bin/su -l op -c 'make && sudo make install'",
-        π
+
         "pip3 install dnsgen uro dirsearch",
         "cargo install x8",
         "cargo install ripgen",
