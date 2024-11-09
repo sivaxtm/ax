@@ -94,19 +94,26 @@
 
         "git clone https://github.com/phor3nsic/favicon_hash_shodan.git /home/op/recon/favicon_hash_shodan",
         "echo 'Installing favicon_hash_shodan'",
-        "/bin/su -l op -c 'python3 setup.py install'",
+        "/bin/su -l op -c 'python3 /home/op/recon/favicon_hash_shodan/setup.py install'",
 
         "git clone https://github.com/0xacb/recollapse.git /home/op/recon/recollapse",
         "echo 'Installing recollapse'",
-        "/bin/su -l op -c 'pip3 install --user --upgrade -r requirements.txt && chmod +x install.sh && ./install.sh'",
+        "/bin/su -l op -c 'pip3 install --user --upgrade -r /home/op/recon/recollapse/requirements.txt && chmod +x /home/op/recon/recollapse/install.sh && /home/op/recon/recollapse/install.sh'",
 
         "git clone https://github.com/jim3ma/crunch.git /home/op/recon/crunch",
         "echo 'Installing crunch'",
-        "/bin/su -l op -c 'make && sudo make install'",
+        "/bin/su -l op -c 'cd /home/op/recon/crunch && make && sudo make install && cd ~/'",
 
+        "echo 'Installing dnsgen uro dirsearch'",
         "pip3 install dnsgen uro dirsearch",
+
+        "echo 'Installing x8'",
         "cargo install x8",
+
+        "echo 'Installing ripgen'",
         "cargo install ripgen",
+
+        "echo 'Installing wpscan'",
         "gem install wpscan",
 
         "echo 'Installing waybackurls'",
