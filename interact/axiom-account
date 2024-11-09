@@ -375,6 +375,9 @@ if [ ! -z "$1" ]; then
       echo -e "${BGreen}Installing AWS packer plugin...${Color_Off}"
       packer plugins install github.com/hashicorp/amazon
 
+      cat "${AXIOM_PATH}/axiom.json"
+      jq -r '.aws_access_key' "$AXIOM_PATH"/axiom.json
+
       # Use credentials from axiom.json if available
       aws_access_key="$(jq -r '.aws_access_key' "$AXIOM_PATH"/axiom.json)"
       aws_secret_access_key="$(jq -r '.aws_secret_access_key' "$AXIOM_PATH"/axiom.json)"
