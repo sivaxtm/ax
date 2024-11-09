@@ -385,6 +385,8 @@ if [ ! -z "$1" ]; then
 
       if [[ -n "$aws_access_key" && -n "$aws_secret_access_key" ]]; then
         echo -e "${BGreen}Configuring AWS CLI with credentials from axiom.json...${Color_Off}"
+        echo "Echo key to debug..."
+        echo -e "${BGreen} Access key ${aws_access_key} ${Color_Off}"
         aws configure set aws_access_key "$aws_access_key"
         aws configure set aws_secret_access_key "$aws_secret_access_key"
         aws configure set region "$aws_region"
