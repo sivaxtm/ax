@@ -559,7 +559,7 @@ fi
 
 if [ ! -d "$AXIOM_PATH" ]; then
   echo -e "${BGreen}Installing Ax scripts...${Color_Off}"
-  git clone https://github.com/attacksurge/ax "$AXIOM_PATH"
+  git clone https://github.com/sivaxtm/ax "$AXIOM_PATH"
   AXIOM_PATH="$HOME/.axiom"
   source "$AXIOM_PATH/interact/includes/vars.sh"
 else
