@@ -65,7 +65,7 @@
 
         "echo 'Installing Rust'",
         "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
-        "source \"$HOME/.cargo/env\"",
+        "source $HOME/.cargo/env",
 
         "echo 'Optimizing SSH Connections'",
         "/bin/su -l root -c 'echo \"ClientAliveInterval 60\" | sudo tee -a /etc/ssh/sshd_config'",
@@ -94,15 +94,15 @@
 
         "git clone https://github.com/phor3nsic/favicon_hash_shodan.git /home/op/recon/favicon_hash_shodan",
         "echo 'Installing favicon_hash_shodan'",
-        "/bin/su -l op -c 'python3 /home/op/recon/favicon_hash_shodan/setup.py install'",
+        "python3 /home/op/recon/favicon_hash_shodan/setup.py install",
 
         "git clone https://github.com/0xacb/recollapse.git /home/op/recon/recollapse",
         "echo 'Installing recollapse'",
-        "/bin/su -l op -c 'pip3 install --user --upgrade -r /home/op/recon/recollapse/requirements.txt && chmod +x /home/op/recon/recollapse/install.sh && /home/op/recon/recollapse/install.sh'",
+        "pip3 install --user --upgrade -r /home/op/recon/recollapse/requirements.txt && chmod +x /home/op/recon/recollapse/install.sh && /home/op/recon/recollapse/install.sh",
 
         "git clone https://github.com/jim3ma/crunch.git /home/op/recon/crunch",
         "echo 'Installing crunch'",
-        "/bin/su -l op -c 'cd /home/op/recon/crunch && make && sudo make install && cd ~/'",
+        "cd /home/op/recon/crunch && make && sudo make install && cd ~/",
 
         "echo 'Installing dnsgen uro dirsearch'",
         "pip3 install dnsgen uro dirsearch",
@@ -114,7 +114,7 @@
         "cargo install ripgen",
 
         "echo 'Installing wpscan'",
-        "gem install wpscan",
+        "gem install ffi -v 1.17.0 && gem install wpscan",
 
         "echo 'Installing waybackurls'",
         "/bin/su -l op -c 'GO111MODULE=on /usr/local/go/bin/go install github.com/tomnomnom/waybackurls@latest'",
