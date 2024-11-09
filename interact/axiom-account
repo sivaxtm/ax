@@ -375,9 +375,6 @@ if [ ! -z "$1" ]; then
       echo -e "${BGreen}Installing AWS packer plugin...${Color_Off}"
       packer plugins install github.com/hashicorp/amazon
 
-      cat "${AXIOM_PATH}/axiom.json"
-      jq -r '.aws_access_key' "$AXIOM_PATH"/axiom.json
-
       # Use credentials from axiom.json if available
       aws_access_key="$(jq -r '.aws_access_key' "$AXIOM_PATH"/axiom.json)"
       aws_secret_access_key="$(jq -r '.aws_secret_access_key' "$AXIOM_PATH"/axiom.json)"
@@ -385,12 +382,6 @@ if [ ! -z "$1" ]; then
 
       if [[ -n "$aws_access_key" && -n "$aws_secret_access_key" ]]; then
         echo -e "${BGreen}Configuring AWS CLI with credentials from axiom.json...${Color_Off}"
-        echo "Echo key to debug..."
-        echo -e "${BGreen} Access key ${aws_access_key} ${Color_Off}"
-
-        echo "ACCESS $AWS_ACCESS_KEY_ID"
-        echo "SECRET $AWS_SECRET_ACCESS_KEY"
-        echo "SESSION $AWS_SESSION_TOKEN"
 
         aws configure set aws_access_key "$aws_access_key"
         aws configure set aws_secret_access_key "$aws_secret_access_key"
@@ -404,16 +395,10 @@ if [ ! -z "$1" ]; then
         bootstrap
       fi
 
-      echo "2nd ACCESS $AWS_ACCESS_KEY_ID"
-      echo "2nd SECRET $AWS_SECRET_ACCESS_KEY"
-      echo "2nd SESSION $AWS_SESSION_TOKEN"
-
       # Check if AWS CLI is authenticated
-      if ! aws sts get-caller-identity --debug &>/dev/null; then
+      if ! aws sts get-caller-identity &>/dev/null; then
         echo -e "${BRed}AWS CLI is not authenticated.${Color_Off} Running bootstrap..."
-        # TODO tobe removed
-        exit 1
-#        bootstrap
+        bootstrap
       else
         echo -e "${BGreen}AWS CLI is authenticated.${Color_Off}"
       fi

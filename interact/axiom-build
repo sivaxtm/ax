@@ -13,7 +13,7 @@ source "$AXIOM_PATH/interact/includes/system-notification.sh"
 region="$(jq -r '.region' "$AXIOM_PATH"/axiom.json)"
 builder="$(jq -r '.provider' "$AXIOM_PATH"/axiom.json)"
 start_time=$(date +%s)
-op_ssh_password=$(cat /dev/urandom| base64 | head -c 128 | tr -d '+=-' | tr -d '\n' | tr -d /)
+op_ssh_password=$(cat /dev/urandom | base64 | head -c 128 | tr -d '+=-' | tr -d '\n' | tr -d /)
 account_path=$(ls -la $AXIOM_PATH/axiom.json | rev | cut -d " " -f 1 | rev)
 provider="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.provider')"
 BASEOS="$(uname)"
@@ -24,7 +24,7 @@ extension=pkr.hcl
 #  Display axiom banner and authors
 #
 banner() {
-cat << EOF >&2
+  cat <<EOF >&2
 
  █████╗ ██╗  ██╗    ██████╗ ██╗   ██╗██╗██╗     ██████╗
 ██╔══██╗╚██╗██╔╝    ██╔══██╗██║   ██║██║██║     ██╔══██╗
@@ -35,8 +35,8 @@ cat << EOF >&2
 
 Maintainer: 0xtavian
 EOF
-echo ''
-echo '
+  echo ''
+  echo '
  "𝓲𝓷𝓼𝓹𝓲𝓻𝓮𝓭 𝓫𝔂 𝓪𝔁𝓲𝓸𝓶: 𝓽𝓱𝓮 𝓭𝔂𝓷𝓪𝓶𝓲𝓬 𝓲𝓷𝓯𝓻𝓪𝓼𝓽𝓻𝓾𝓬𝓽𝓾𝓻𝓮 𝓯𝓻𝓪𝓶𝓮𝔀𝓸𝓻𝓴 𝓯𝓸𝓻 𝓮𝓿𝓮𝓻𝔂𝓫𝓸𝓭𝔂! - @𝓹𝓻𝔂0𝓬𝓬 @0𝔁𝓽𝓪𝓿𝓲𝓪𝓷"
  "𝓽𝓱𝓮 𝓬𝓸𝓷𝓽𝓲𝓷𝓾𝓪𝓽𝓲𝓸𝓷 𝓸𝓯 𝓪𝔁𝓲𝓸𝓶: 𝓽𝓱𝓮 𝓭𝔂𝓷𝓪𝓶𝓲𝓬 𝓲𝓷𝓯𝓻𝓪𝓼𝓽𝓻𝓾𝓬𝓽𝓾𝓻𝓮 𝓯𝓻𝓪𝓶𝓮𝔀𝓸𝓻𝓴 𝓯𝓸𝓻 𝓮𝓿𝓮𝓻𝔂𝓫𝓸𝓭𝔂! - @𝓹𝓻𝔂0𝓬𝓬 @0𝔁𝓽𝓪𝓿𝓲𝓪𝓷"
  "𝓬𝓸𝓷𝓽𝓲𝓷𝓾𝓮𝓭 𝓯𝓻𝓸𝓶: 𝓪𝔁𝓲𝓸𝓶: 𝓽𝓱𝓮 𝓭𝔂𝓷𝓪𝓶𝓲𝓬 𝓲𝓷𝓯𝓻𝓪𝓼𝓽𝓻𝓾𝓬𝓽𝓾𝓻𝓮 𝓯𝓻𝓪𝓶𝓮𝔀𝓸𝓻𝓴 𝓯𝓸𝓻 𝓮𝓿𝓮𝓻𝔂𝓫𝓸𝓭𝔂! - @𝓹𝓻𝔂0𝓬𝓬 @0𝔁𝓽𝓪𝓿𝓲𝓪𝓷"
@@ -45,7 +45,7 @@ echo '
  "𝓪𝓵𝓻𝓲𝓰𝓱𝓽, 𝔂𝓸𝓾 𝓰𝓸𝓽 𝓶𝓮, 𝓲𝓽𝓼 𝓳𝓾𝓼𝓽 𝓪𝔁𝓲𝓸𝓶: 𝓽𝓱𝓮 𝓭𝔂𝓷𝓪𝓶𝓲𝓬 𝓲𝓷𝓯𝓻𝓪𝓼𝓽𝓻𝓾𝓬𝓽𝓾𝓻𝓮 𝓯𝓻𝓪𝓶𝓮𝔀𝓸𝓻𝓴 𝓯𝓸𝓻 𝓮𝓿𝓮𝓻𝔂𝓫𝓸𝓭𝔂! - @𝓹𝓻𝔂0𝓬𝓬 @0𝔁𝓽𝓪𝓿𝓲𝓪𝓷"
  "𝓼𝓽𝓸𝓵𝓮𝓷 𝓯𝓻𝓸𝓶: 𝓪𝔁𝓲𝓸𝓶: 𝓽𝓱𝓮 𝓭𝔂𝓷𝓪𝓶𝓲𝓬 𝓲𝓷𝓯𝓻𝓪𝓼𝓽𝓻𝓾𝓬𝓽𝓾𝓻𝓮 𝓯𝓻𝓪𝓶𝓮𝔀𝓸𝓻𝓴 𝓯𝓸𝓻 𝓮𝓿𝓮𝓻𝔂𝓫𝓸𝓭𝔂! - @𝓹𝓻𝔂0𝓬𝓬 @0𝔁𝓽𝓪𝓿𝓲𝓪𝓷"
  ' | xargs shuf -n1 -e
-echo ''
+  echo ''
 
 }
 banner
@@ -54,130 +54,131 @@ banner
 # Help Menu:
 #
 function help() {
-        echo -e "${BWhite}Description:${Color_Off}"
-        echo -e "  axiom-build supports both legacy ${BGreen}Packer JSON${Color_Off} files as well as the new ${BGreen}HCL format${Color_Off}"
-        echo -e "  axiom-build combines a cloud provider's ${BGreen}Builder${Color_Off} (~/.axiom/images/\$format/builders) with a ${BGreen}Provisioner ${Color_Off}(~/.axiom/images/\$format/provisioners)"
-        echo -e "  to generate the final ${BGreen}Packer file${Color_Off} (~/.axiom/images/\$format/axiom.\$format)"
-        echo -e "  Using ${BGreen}Packer${Color_Off}, axiom-build creates an image with the tools pre-installed, as defined by the chosen Provisioner"
-        echo -e "  Choose between multiple Provisioners (barebones, default, reconftw, and extras) or bring your own (custom)"
-        echo -e ""
-        echo -e "  axiom-build adds your${BGreen} SSH key${Color_Off} to the image, allowing you to connect to instances created using the image"
-        echo -e "  By default, it creates and uses an SSH key located at ~/.ssh/axiom_ssh.pub, but you can specify a ${BGreen}custom SSH key${Color_Off} if needed"
-        echo -e "${BWhite}Examples:${Color_Off}"
-        echo -e "  ${BGreen}axiom-build --run ${Color_Off}# Kick off the interactive build wizard"
-        echo -e "  ${BGreen}axiom-build default${Color_Off} # Build a new Packer image using the Default Provisioner"
-        echo -e "  ${BGreen}axiom-build barebones --debug ${Color_Off}# Build a new Packer image using the Barebones Provisioner, run with --debug"
-        echo -e "  ${BGreen}axiom-build --ssh-key ~/.ssh/id_rsa.pub ${Color_Off}# Set a custom SSH key (default is SSH key in ~/.ssh/axiom_ssh.pub)"
-        echo -e "${BWhite}Usage:${Color_Off}"
-        echo -e "  <provisioner> (optional)"
-        echo -e "    Name of provisioner to build, options are barebones, default, reconftw, extras or custom (provisioner must be located in ~/.axiom/images/\$format/provisioners)"
-        echo -e "  --run (optional)"
-        echo -e "    Start axiom-build setup wizard"
-        echo -e "  --legacy (optional)"
-        echo -e "    Use legacy Packer JSON Builder and Provisioner instead of pkr.hcl"
-        echo -e "  --ssh-key <file to pub key> (optional)"
-        echo -e "    Build the image using a custom SSH key (instead of using the default ssh key axiom creates ~/.ssh/axiom_ssh.pub)"
-        echo -e "  --debug (optional)"
-        echo -e "    Enable debug mode (VERY VERBOSE!)"
-        echo -e "  --help (optional)"
-        echo -e "    Display this help menu"
+  echo -e "${BWhite}Description:${Color_Off}"
+  echo -e "  axiom-build supports both legacy ${BGreen}Packer JSON${Color_Off} files as well as the new ${BGreen}HCL format${Color_Off}"
+  echo -e "  axiom-build combines a cloud provider's ${BGreen}Builder${Color_Off} (~/.axiom/images/\$format/builders) with a ${BGreen}Provisioner ${Color_Off}(~/.axiom/images/\$format/provisioners)"
+  echo -e "  to generate the final ${BGreen}Packer file${Color_Off} (~/.axiom/images/\$format/axiom.\$format)"
+  echo -e "  Using ${BGreen}Packer${Color_Off}, axiom-build creates an image with the tools pre-installed, as defined by the chosen Provisioner"
+  echo -e "  Choose between multiple Provisioners (barebones, default, reconftw, and extras) or bring your own (custom)"
+  echo -e ""
+  echo -e "  axiom-build adds your${BGreen} SSH key${Color_Off} to the image, allowing you to connect to instances created using the image"
+  echo -e "  By default, it creates and uses an SSH key located at ~/.ssh/axiom_ssh.pub, but you can specify a ${BGreen}custom SSH key${Color_Off} if needed"
+  echo -e "${BWhite}Examples:${Color_Off}"
+  echo -e "  ${BGreen}axiom-build --run ${Color_Off}# Kick off the interactive build wizard"
+  echo -e "  ${BGreen}axiom-build default${Color_Off} # Build a new Packer image using the Default Provisioner"
+  echo -e "  ${BGreen}axiom-build barebones --debug ${Color_Off}# Build a new Packer image using the Barebones Provisioner, run with --debug"
+  echo -e "  ${BGreen}axiom-build --ssh-key ~/.ssh/id_rsa.pub ${Color_Off}# Set a custom SSH key (default is SSH key in ~/.ssh/axiom_ssh.pub)"
+  echo -e "${BWhite}Usage:${Color_Off}"
+  echo -e "  <provisioner> (optional)"
+  echo -e "    Name of provisioner to build, options are barebones, default, reconftw, extras or custom (provisioner must be located in ~/.axiom/images/\$format/provisioners)"
+  echo -e "  --run (optional)"
+  echo -e "    Start axiom-build setup wizard"
+  echo -e "  --legacy (optional)"
+  echo -e "    Use legacy Packer JSON Builder and Provisioner instead of pkr.hcl"
+  echo -e "  --ssh-key <file to pub key> (optional)"
+  echo -e "    Build the image using a custom SSH key (instead of using the default ssh key axiom creates ~/.ssh/axiom_ssh.pub)"
+  echo -e "  --debug (optional)"
+  echo -e "    Enable debug mode (VERY VERBOSE!)"
+  echo -e "  --help (optional)"
+  echo -e "    Display this help menu"
 }
-
 
 ###########################################################################################################
 # Parse command line arguments
 #
 if [[ "$@" == "--help" ]] || [[ "$@" == "-h" ]] || [[ "$@" == "" ]]; then
-help
-exit
+  help
+  exit
 fi
 
 ###########################################################################################################
 # Parse command line arguments
 #
 i=0
-for arg in "$@"
-do
-    i=$((i+1))
-    if [[  ! " ${pass[@]} " =~ " ${i} " ]]; then
-        set=false
-        if [[ "$arg" == "--debug" ]]; then
-            set -xv
-            export PACKER_LOG=1
-            set=true
-            pass+=($i)
-        fi
-        if [[ "$arg" == "--help" ]] || [[ "$arg" == "-h" ]]; then
-            usage
-            exit
-            set=true
-            pass+=($i)
-        fi
-       if [[ "$arg" == "--run" ]] || [[ "$arg" == "--setup" ]]; then
-            setup=true
-            set=true
-            pass+=($i)
-        fi
-        if [[ "$arg" == "--legacy" ]]; then
-         extension=json
-         set=true
-         pass+=($i)
-        fi
-        if [[ "$arg" == "--ssh-key" ]]|| [[ "$arg" == "--sshkey" ]] ; then
-            n=$((i+1))
-            custom_ssh_key=$(echo ${!n})
-            set=true
-            pass+=($i)
-            pass+=($n)
-        fi
-
-        if  [[ "$set" != "true" ]]; then
-            provisioner="$arg"
-        fi
+for arg in "$@"; do
+  i=$((i + 1))
+  if [[ ! " ${pass[@]} " =~ " ${i} " ]]; then
+    set=false
+    if [[ "$arg" == "--debug" ]]; then
+      set -xv
+      export PACKER_LOG=1
+      set=true
+      pass+=($i)
     fi
+    if [[ "$arg" == "--help" ]] || [[ "$arg" == "-h" ]]; then
+      usage
+      exit
+      set=true
+      pass+=($i)
+    fi
+    if [[ "$arg" == "--run" ]] || [[ "$arg" == "--setup" ]]; then
+      setup=true
+      set=true
+      pass+=($i)
+    fi
+    if [[ "$arg" == "--legacy" ]]; then
+      extension=json
+      set=true
+      pass+=($i)
+    fi
+    if [[ "$arg" == "--ssh-key" ]] || [[ "$arg" == "--sshkey" ]]; then
+      n=$((i + 1))
+      custom_ssh_key=$(echo ${!n})
+      set=true
+      pass+=($i)
+      pass+=($n)
+    fi
+
+    if [[ "$set" != "true" ]]; then
+      provisioner="$arg"
+    fi
+  fi
 done
 
 ############################################################################################################
 # Get the provisioner file
 #
 if [ -z "$provisioner" ]; then
-    echo -e '\033[1mTime to pick your provisioner. Options: default, reconftw, barebones, custom\033[0m'
-    echo -e "${Yellow}Default: is our latest iteration of axiom provisioners. It comes with all tools installed and has been optimized for readability. Recommended for axiom-fleet${Color_Off}"
-    echo -e "${Green}ReconFTW: includes all tools in ReconFTW and works with most modules. Recommended for ReconFTW.${Color_Off}"
-    echo -e "${Yellow}Barebones: a decently secure base install, comes with Docker, Go-lang, Interlace and nmap installed. Recommended for templating.${Color_Off}"
-    echo -e "${Green}Extras: more tools installed compared to default${Color_Off}"
-    echo -e "${Yellow}Custom: custom Packer provisioner you provide.${Color_Off}"
-    echo -e -n "${BGreen}Which axiom provisioner would you like to use: default, reconftw, barebones, custom? (option: press enter to select Default) \n>>${Color_Off}"
+  echo -e '\033[1mTime to pick your provisioner. Options: default, reconftw, barebones, custom\033[0m'
+  echo -e "${Yellow}Default: is our latest iteration of axiom provisioners. It comes with all tools installed and has been optimized for readability. Recommended for axiom-fleet${Color_Off}"
+  echo -e "${Green}ReconFTW: includes all tools in ReconFTW and works with most modules. Recommended for ReconFTW.${Color_Off}"
+  echo -e "${Yellow}Barebones: a decently secure base install, comes with Docker, Go-lang, Interlace and nmap installed. Recommended for templating.${Color_Off}"
+  echo -e "${Green}Extras: more tools installed compared to default${Color_Off}"
+  echo -e "${Yellow}Custom: custom Packer provisioner you provide.${Color_Off}"
+  echo -e -n "${BGreen}Which axiom provisioner would you like to use: default, reconftw, barebones, custom? (option: press enter to select Default) \n>>${Color_Off}"
 
+  read ans
+  if [[ $ans == "default" ]] || [[ $ans == "Default" ]]; then
+    echo -e "${Green}Selected provisioner option 'Default'${Color_Off}"
+    provisioner="default"
+  elif [[ $ans == "reconftw" ]] || [[ $ans == "Reconftw" ]] || [[ $ans == "ReconFTW" ]]; then
+    echo -e "${Green}Selected provisioner option 'ReconFTW'${Color_Off}"
+    provisioner="reconftw"
+  elif [[ $ans == "barebones" ]] || [[ $ans == "Barebones" ]]; then
+    echo -e "${Green}Selected provisioner option 'Barebones'${Color_Off}"
+    provisioner="barebones"
+  elif [[ $ans == "Extras" ]] || [[ $ans == "extras" ]] || [[ $ans == "extra" ]]; then
+    echo -e "${Green}Selected provisioner option 'Extras'${Color_Off}"
+    provisioner="extras"
+  elif [[ $ans == "WatchTower" ]] || [[ $ans == "watchtower" ]] || [[ $ans == "watch-tower" ]]; then
+    echo -e "${Green}Selected provisioner option 'WatchTower'${Color_Off}"
+    provisioner="watch-tower"
+    extension=json
+  elif [[ $ans == "custom" ]] || [[ $ans == "Custom" ]]; then
+    echo -e "${Red}Your Packer provosioner must be located in "$AXIOM_PATH/images/$extension/provisioners/". Make sure to move it.${Color_Off}"
+    echo -e "${Green}Listing all provisioners available in "$AXIOM_PATH/images/$extension/provisioners/" ...${Color_Off}"
+    ls -1 $AXIOM_PATH/images/$extension/provisioners/ | sort -u | sed -e 's/\.json$//' | sed -e 's/\.pkr.hcl$//'
+    echo -e -n "${Green}Enter the provisioner filename. \n>>${Color_Off}"
     read ans
-    if [[ $ans == "default" ]] || [[ $ans == "Default" ]]; then
-              echo -e "${Green}Selected provisioner option 'Default'${Color_Off}"
-              provisioner="default"
-    elif [[ $ans == "reconftw" ]] ||  [[ $ans == "Reconftw" ]] ||  [[ $ans == "ReconFTW" ]]; then
-               echo -e "${Green}Selected provisioner option 'ReconFTW'${Color_Off}"
-               provisioner="reconftw"
-    elif [[ $ans == "barebones" ]] || [[ $ans == "Barebones" ]]; then
-               echo -e "${Green}Selected provisioner option 'Barebones'${Color_Off}"
-               provisioner="barebones"
-    elif [[ $ans == "Extras" ]] || [[ $ans == "extras" ]] || [[ $ans == "extra" ]]; then
-               echo -e "${Green}Selected provisioner option 'Extras'${Color_Off}"
-               provisioner="extras"
-    elif [[ $ans == "custom" ]] || [[ $ans == "Custom" ]]; then
-               echo -e "${Red}Your Packer provosioner must be located in "$AXIOM_PATH/images/$extension/provisioners/". Make sure to move it.${Color_Off}"
-               echo -e "${Green}Listing all provisioners available in "$AXIOM_PATH/images/$extension/provisioners/" ...${Color_Off}"
-               ls -1 $AXIOM_PATH/images/$extension/provisioners/ | sort -u | sed -e 's/\.json$//' |  sed -e 's/\.pkr.hcl$//'
-               echo -e -n "${Green}Enter the provisioner filename. \n>>${Color_Off}"
-               read ans
-               provisioner=$ans
-               echo -e "${Green}Selected provisioner option 'Custom', using $ans ${Color_Off}"
-    elif [[ $ans == "" ]]; then
-               echo -e "${Green}Selected default provisioner option 'Default'${Color_Off}"
-               provisioner="default"
-    else
-               provisioner=$ans
-    fi
+    provisioner=$ans
+    echo -e "${Green}Selected provisioner option 'Custom', using $ans ${Color_Off}"
+  elif [[ $ans == "" ]]; then
+    echo -e "${Green}Selected default provisioner option 'Default'${Color_Off}"
+    provisioner="default"
+  else
+    provisioner=$ans
+  fi
 fi
-
 
 ############################################################################################################
 # check the provisioner and bulder exist
@@ -185,40 +186,40 @@ fi
 packer_provisioner_path="$AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension"
 packer_builder_path="$AXIOM_PATH/images/$extension/builders/$builder.$extension"
 if [ ! -f "$packer_provisioner_path" ]; then
-        echo -e "${Yellow}Warning: cant find $extension Packer Provisioner in $AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension"
-        echo -e "Checking for legacy Packer JSON Provisioner in $AXIOM_PATH/images/json/provisioners/$provisioner.json${Color_Off}"
-        if [ -f "$AXIOM_PATH/images/json/provisioners/$provisioner.json" ]; then
-         echo -e "${BGreen}Provisioner found! $AXIOM_PATH/images/json/provisioners/$provisioner.json!${Color_Off}"
-         packer_provisioner_path="$AXIOM_PATH/images/json/provisioners/$provisioner.json"
-         extension=json
-        else
-         echo -e "${Yellow}Warning: can not find legacy Packer JSON in $AXIOM_PATH/images/json/provisioners/$provisioner.json"
-         echo -e "${Yellow}Looking in $AXIOM_PATH/images/provisioners/$provisioner.json just in case...${Color_Off}"
-          if [ -f "$AXIOM_PATH/images/provisioners/$provisioner.json" ]; then
-           echo -e "${BGreen}Provisioner found! Moving it to $AXIOM_PATH/images/json/provisioners/$provisioner.json${Color_Off}"
-           mv $AXIOM_PATH/images/provisioners/$provisioner.json $AXIOM_PATH/images/json/provisioners/$provisioner.json
-           packer_provisioner_path="$AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension"
-           extension=json
-          else
-           echo -e "${Red}Error: unfortunately, can not find Packer Provisioner.."
-           echo -e "${Red}Make sure your provisioner is located in $AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension and run again"
-           echo -e "${Red}exiting..${Color_Off}"
-           exit
-          fi
-        fi
+  echo -e "${Yellow}Warning: cant find $extension Packer Provisioner in $AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension"
+  echo -e "Checking for legacy Packer JSON Provisioner in $AXIOM_PATH/images/json/provisioners/$provisioner.json${Color_Off}"
+  if [ -f "$AXIOM_PATH/images/json/provisioners/$provisioner.json" ]; then
+    echo -e "${BGreen}Provisioner found! $AXIOM_PATH/images/json/provisioners/$provisioner.json!${Color_Off}"
+    packer_provisioner_path="$AXIOM_PATH/images/json/provisioners/$provisioner.json"
+    extension=json
+  else
+    echo -e "${Yellow}Warning: can not find legacy Packer JSON in $AXIOM_PATH/images/json/provisioners/$provisioner.json"
+    echo -e "${Yellow}Looking in $AXIOM_PATH/images/provisioners/$provisioner.json just in case...${Color_Off}"
+    if [ -f "$AXIOM_PATH/images/provisioners/$provisioner.json" ]; then
+      echo -e "${BGreen}Provisioner found! Moving it to $AXIOM_PATH/images/json/provisioners/$provisioner.json${Color_Off}"
+      mv $AXIOM_PATH/images/provisioners/$provisioner.json $AXIOM_PATH/images/json/provisioners/$provisioner.json
+      packer_provisioner_path="$AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension"
+      extension=json
+    else
+      echo -e "${Red}Error: unfortunately, can not find Packer Provisioner.."
+      echo -e "${Red}Make sure your provisioner is located in $AXIOM_PATH/images/$extension/provisioners/$provisioner.$extension and run again"
+      echo -e "${Red}exiting..${Color_Off}"
+      exit
+    fi
+  fi
 fi
 
 if [ ! -f "$packer_builder_path" ]; then
 
- if [ ! -f "$AXIOM_PATH/images/$extension/builders/$builder.json" ]; then
- extension=json
- else
-        echo -e ""
-        echo -e "${Red}Error: unfortunately, can not find Packer Builder...${Color_Off}"
-        echo -e "${Red}Make sure your Packer Builder is located in $AXIOM_PATH/images/$extension/builders/$builder.$extension and run again"
-        echo -e "${Red}exiting..${Color_Off}"
-        exit
- fi
+  if [ ! -f "$AXIOM_PATH/images/$extension/builders/$builder.json" ]; then
+    extension=json
+  else
+    echo -e ""
+    echo -e "${Red}Error: unfortunately, can not find Packer Builder...${Color_Off}"
+    echo -e "${Red}Make sure your Packer Builder is located in $AXIOM_PATH/images/$extension/builders/$builder.$extension and run again"
+    echo -e "${Red}exiting..${Color_Off}"
+    exit
+  fi
 fi
 
 ############################################################################################################
@@ -227,15 +228,15 @@ fi
 snapshot_name=axiom-$provisioner-$(date +%s)
 image_path="$AXIOM_PATH/images/$extension/axiom.$extension"
 $AXIOM_PATH/interact/axiom-provider "$provider"
-mv $image_path $image_path.tmp > /dev/null 2>&1
+mv $image_path $image_path.tmp >/dev/null 2>&1
 "$AXIOM_PATH"/interact/generate_packer "$builder" "$provisioner" "$extension"
 if [ ! -f "$image_path" ]; then
- echo -e "${Red}Error: axiom build failed to generate final Packer provsioner...${Color_Off}"
- echo -e "${Red}exiting..${Color_Off}"
- mv $image_path.tmp $image_path > /dev/null 2>&1
- exit
+  echo -e "${Red}Error: axiom build failed to generate final Packer provsioner...${Color_Off}"
+  echo -e "${Red}exiting..${Color_Off}"
+  mv $image_path.tmp $image_path >/dev/null 2>&1
+  exit
 else
- rm $image_path.tmp > /dev/null 2>&1
+  rm $image_path.tmp >/dev/null 2>&1
 fi
 
 #############################################################################################################
@@ -246,53 +247,55 @@ fi
 #
 
 if [[ "$custom_ssh_key" == false ]]; then
- account_path=$(ls -la $AXIOM_PATH/axiom.json | rev | cut -d " " -f 1 | rev)
- sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
-
-# If custom SSH key is found in "$AXIOM_PATH/axiom.json", add it to Packer builder
- if [ -f ~/.ssh/$sshkey ] ; then
-  echo -e "${BGreen}Adding $sshkey SSH key to Packer Builder${Color_Off}"
-  cat ~/.ssh/$sshkey.pub >$AXIOM_PATH/configs/authorized_keys
-
-# If axiom_rsa key is already created but not in "$AXIOM_PATH/axiom.json", add it to $AXIOM_PATH/axiom.json" and Packer builder
- elif [ -f ~/.ssh/axiom_rsa ] ; then
-  echo -e "${BGreen}Adding axiom_rsa SSH key to Packer Builder${Color_Off}"
-  jq '.sshkey="'axiom_rsa'"' <"$account_path">"$AXIOM_PATH"/tmp.json ; mv "$AXIOM_PATH"/tmp.json "$account_path"
-  cat ~/.ssh/axiom_rsa.pub >$AXIOM_PATH/configs/authorized_keys
+  account_path=$(ls -la $AXIOM_PATH/axiom.json | rev | cut -d " " -f 1 | rev)
   sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
 
-# If axiom_rsa is not created, create it and then add it to "$AXIOM_PATH/axiom.json" and Packer builder
- else
-  echo -e "${BGreen}Creating axiom SSH key in ~/.ssh/axiom_rsa.pub and adding it to Packer Builder${Color_Off}"
-  ssh-keygen -b 2048 -t rsa -f ~/.ssh/axiom_rsa -q -N ""
-  jq '.sshkey="'axiom_rsa'"' <"$account_path">"$AXIOM_PATH"/tmp.json ; mv "$AXIOM_PATH"/tmp.json "$account_path"
-  cat ~/.ssh/axiom_rsa.pub >$AXIOM_PATH/configs/authorized_keys
-  sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
- fi
+  # If custom SSH key is found in "$AXIOM_PATH/axiom.json", add it to Packer builder
+  if [ -f ~/.ssh/$sshkey ]; then
+    echo -e "${BGreen}Adding $sshkey SSH key to Packer Builder${Color_Off}"
+    cat ~/.ssh/$sshkey.pub >$AXIOM_PATH/configs/authorized_keys
 
- if [[ ! -f "$AXIOM_PATH/configs/authorized_keys" ]]
- then
-	 echo -e "${BRed}You have no authorized keys file at $AXIOM_PATH/configs/authorized_keys"
-	 echo -e  "Please make sure an SSH key exists in ~/.axiom/axiom.json or rerun axiom-configure."
-	 echo -e "Then run axiom-build..${Color_Off}"
-	 exit
- fi
+    # If axiom_rsa key is already created but not in "$AXIOM_PATH/axiom.json", add it to $AXIOM_PATH/axiom.json" and Packer builder
+  elif [ -f ~/.ssh/axiom_rsa ]; then
+    echo -e "${BGreen}Adding axiom_rsa SSH key to Packer Builder${Color_Off}"
+    jq '.sshkey="'axiom_rsa'"' <"$account_path" >"$AXIOM_PATH"/tmp.json
+    mv "$AXIOM_PATH"/tmp.json "$account_path"
+    cat ~/.ssh/axiom_rsa.pub >$AXIOM_PATH/configs/authorized_keys
+    sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
+
+    # If axiom_rsa is not created, create it and then add it to "$AXIOM_PATH/axiom.json" and Packer builder
+  else
+    echo -e "${BGreen}Creating axiom SSH key in ~/.ssh/axiom_rsa.pub and adding it to Packer Builder${Color_Off}"
+    ssh-keygen -b 2048 -t rsa -f ~/.ssh/axiom_rsa -q -N ""
+    jq '.sshkey="'axiom_rsa'"' <"$account_path" >"$AXIOM_PATH"/tmp.json
+    mv "$AXIOM_PATH"/tmp.json "$account_path"
+    cat ~/.ssh/axiom_rsa.pub >$AXIOM_PATH/configs/authorized_keys
+    sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
+  fi
+
+  if [[ ! -f "$AXIOM_PATH/configs/authorized_keys" ]]; then
+    echo -e "${BRed}You have no authorized keys file at $AXIOM_PATH/configs/authorized_keys"
+    echo -e "Please make sure an SSH key exists in ~/.axiom/axiom.json or rerun axiom-configure."
+    echo -e "Then run axiom-build..${Color_Off}"
+    exit
+  fi
 
 else
- if [ -f $custom_ssh_key ] ; then
-  if [ "${custom_ssh_key: -4}" == ".pub" ]; then
-   echo -e "${BGreen}Adding $custom_ssh_key SSH key to Packer Builder${Color_Off}"
-   sshkey=$(basename $custom_ssh_key | rev | cut -d . -f 2- |rev)
-   cat $custom_ssh_key >$AXIOM_PATH/configs/authorized_keys
-   jq '.sshkey="'$sshkey'"' <"$account_path">"$AXIOM_PATH"/tmp.json ; mv "$AXIOM_PATH"/tmp.json "$account_path"
+  if [ -f $custom_ssh_key ]; then
+    if [ "${custom_ssh_key: -4}" == ".pub" ]; then
+      echo -e "${BGreen}Adding $custom_ssh_key SSH key to Packer Builder${Color_Off}"
+      sshkey=$(basename $custom_ssh_key | rev | cut -d . -f 2- | rev)
+      cat $custom_ssh_key >$AXIOM_PATH/configs/authorized_keys
+      jq '.sshkey="'$sshkey'"' <"$account_path" >"$AXIOM_PATH"/tmp.json
+      mv "$AXIOM_PATH"/tmp.json "$account_path"
+    else
+      echo -e "${Red}Error: the ssh key provided does not end in .pub. You must provide a public SSH key..exiting..."
+      exit 1
+    fi
   else
-   echo -e "${Red}Error: the ssh key provided does not end in .pub. You must provide a public SSH key..exiting..."
-   exit 1
+    echo -e "${Red}Error: can not find custom ssh key at $custom_ssh_key... exiting"
+    exit 1
   fi
-  else
-   echo -e "${Red}Error: can not find custom ssh key at $custom_ssh_key... exiting"
-   exit 1
- fi
 fi
 
 #############################################################################################################
@@ -304,8 +307,8 @@ cd "$AXIOM_PATH"/ || exit
 # change password or fail
 #
 if [ -z "$op_ssh_password" ]; then
-    echo -e "Unable to generate random password for Packer image.. exiting"
-    exit 0
+  echo -e "Unable to generate random password for Packer image.. exiting"
+  exit 0
 fi
 
 #############################################################################################################
@@ -314,47 +317,47 @@ fi
 echo -e "${Green}If this build completes successfully, the following updated axiom.json data will be stored in $account_path${Color_Off}"
 
 if [[ "$provider" == "aws" ]]; then
- cat "$account_path" | jq '.aws_secret_access_key = "*************************************"'| \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.aws_secret_access_key = "*************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "azure" ]]; then
- cat "$account_path" | jq '.client_secret = "*************************************"'| \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.client_secret = "*************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "do" ]]; then
- cat "$account_path" | jq '.do_key = "************************************************************************"'| \
- jq '.op = "***************************************************************************************************************************"' | \
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.do_key = "************************************************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "ibm" ]]; then
- cat "$account_path" | jq '.sl_key = "************************************************************************" | .ibm_cloud_api_key = "***************************************"'| \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.sl_key = "************************************************************************" | .ibm_cloud_api_key = "***************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "linode" ]]; then
- cat "$account_path" | jq '.linode_key = "*******************************************************"'| \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.linode_key = "*******************************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "hetzner" ]]; then
- cat "$account_path" |jq '.hetzner_key =  "****************************************************************"'| \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.hetzner_key =  "****************************************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "scaleway" ]]; then
- cat "$account_path" |jq '.secret_key = "************************************"'| \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" | jq '.secret_key = "************************************"' |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 elif [[ "$provider" == "gcp" ]]; then
- cat "$account_path" | \
- jq '.op = "***************************************************************************************************************************"' |
- jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"'| jq '.sshkey = "'$sshkey'"'
+  cat "$account_path" |
+    jq '.op = "***************************************************************************************************************************"' |
+    jq '.imageid = "'$snapshot_name'"' | jq '.provisioner = "'$provisioner'"' | jq '.provisioner = "'$provisioner'"' | jq '.sshkey = "'$sshkey'"'
 
 else
- cat "$account_path"
+  cat "$account_path"
 fi
 
 ############################################################################################################
@@ -369,30 +372,30 @@ sleep 8
 # Change packer version for IBM
 #
 if [[ "$provider" == "ibm" ]]; then
- if [[ "$extension" == "json" ]]; then
-  mkdir -p ~/.packer.d/plugins/
-  mkdir -p /tmp/packer-ibm/
-  if [[ ! -f /tmp/packer-ibm/packer ]] || [[ ! -f "$HOME/.packer.d/plugins/packer-builder-ibmcloud" ]]; then
-   if [[ $BASEOS == "Linux" ]]; then
-    wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_linux_amd64.zip && unzip -qq /tmp/packer.zip -d /tmp/packer-ibm/ && rm /tmp/packer.zip
-    wget -q https://github.com/IBM/packer-plugin-ibmcloud/releases/download/v1.0.1/packer-builder-ibmcloud_1.0.1_linux_64-bit.tar.gz -O - | tar -xz -C ~/.packer.d/plugins/
-   elif [[ $BASEOS == "Darwin" ]]; then
-    wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_darwin_amd64.zip  && unzip -qq /tmp/packer.zip -d /tmp/packer-ibm/ && rm /tmp/packer.zip
-    wget -q https://github.com/IBM/packer-plugin-ibmcloud/releases/download/v1.0.1/packer-builder-ibmcloud_1.0.1_macOS_64-bit.tar.gz -O - | tar -xz -C ~/.packer.d/plugins/
-   fi
-  fi
+  if [[ "$extension" == "json" ]]; then
+    mkdir -p ~/.packer.d/plugins/
+    mkdir -p /tmp/packer-ibm/
+    if [[ ! -f /tmp/packer-ibm/packer ]] || [[ ! -f "$HOME/.packer.d/plugins/packer-builder-ibmcloud" ]]; then
+      if [[ $BASEOS == "Linux" ]]; then
+        wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_linux_amd64.zip && unzip -qq /tmp/packer.zip -d /tmp/packer-ibm/ && rm /tmp/packer.zip
+        wget -q https://github.com/IBM/packer-plugin-ibmcloud/releases/download/v1.0.1/packer-builder-ibmcloud_1.0.1_linux_64-bit.tar.gz -O - | tar -xz -C ~/.packer.d/plugins/
+      elif [[ $BASEOS == "Darwin" ]]; then
+        wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_darwin_amd64.zip && unzip -qq /tmp/packer.zip -d /tmp/packer-ibm/ && rm /tmp/packer.zip
+        wget -q https://github.com/IBM/packer-plugin-ibmcloud/releases/download/v1.0.1/packer-builder-ibmcloud_1.0.1_macOS_64-bit.tar.gz -O - | tar -xz -C ~/.packer.d/plugins/
+      fi
+    fi
 
-  BASEOS="$(uname)"
-  case $BASEOS in
-  'Darwin')
-   PATH="/tmp/packer-ibm/:$(brew --prefix coreutils)/libexec/gnubin:$PATH"
-   ;;
-  'Linux')
-   PATH="/tmp/packer-ibm:$PATH"
-   ;;
-  *) ;;
-  esac
- fi
+    BASEOS="$(uname)"
+    case $BASEOS in
+    'Darwin')
+      PATH="/tmp/packer-ibm/:$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+      ;;
+    'Linux')
+      PATH="/tmp/packer-ibm:$PATH"
+      ;;
+    *) ;;
+    esac
+  fi
 fi
 # ###########################################################################################################
 # Execute the Packer binary to build the final image
@@ -401,51 +404,52 @@ counter=0
 echo -e "${BWhite}Building image ${Color_Off}[ ${BBlue}$provisioner ${Color_Off}]${BWhite} for provider ${Color_Off}[ ${BBlue}$builder ${Color_Off}]${BWhite} using Packer... This can take up to 25 minutes so please be patient!\nIf this fails, verify the account is properly configured and/or try a different region.${Color_Off}"
 
 if [[ $provisioner == "azure" ]]; then
-    cp $AXIOM_PATH/axiom.json $AXIOM_PATH/axiom_bck.json
-    sed -i "/\"region\"/d" > $AXIOM_PATH/axiom.json
+  cp $AXIOM_PATH/axiom.json $AXIOM_PATH/axiom_bck.json
+  sed -i "/\"region\"/d" >$AXIOM_PATH/axiom.json
 fi
 
-if packer build -var-file "$AXIOM_PATH"/axiom.json -var "golang_version=${GolangVersion}" -var "variant=$provisioner" -var "op_random_password=$op_ssh_password" -var "snapshot_name=$snapshot_name" "$image_path";
-then
-	end_time=$(date +%s)
-	seconds="$(expr $end_time - $start_time)"
-	time=""
+if packer build -var-file "$AXIOM_PATH"/axiom.json -var "golang_version=${GolangVersion}" -var "variant=$provisioner" -var "op_random_password=$op_ssh_password" -var "snapshot_name=$snapshot_name" "$image_path"; then
+  end_time=$(date +%s)
+  seconds="$(expr $end_time - $start_time)"
+  time=""
 
-	if [[ "$seconds" -gt 59 ]]
-	then
-		minutes=$(expr $seconds / 60)
-		time="$minutes minutes"
-	else
-		time="$seconds seconds"
-	fi
+  if [[ "$seconds" -gt 59 ]]; then
+    minutes=$(expr $seconds / 60)
+    time="$minutes minutes"
+  else
+    time="$seconds seconds"
+  fi
 
-if [[ $provisioner == "azure" ]]; then
+  if [[ $provisioner == "azure" ]]; then
     mv "$AXIOM_PATH/axiom_bck.json" "$AXIOM_PATH/axiom.json"
-fi
+  fi
 
-    echo -e "${BGreen}Your build completed successfully in $time! You should run axiom-update && axiom-build weekly to get the latest and greatest updates! ${Color_Off}"
-    echo -e "${Green}To initialize an instance, run axiom-init${Color_Off}"
-    "$NOTIFY_CMD" "Axiom Info" "Build completed successfully!"
+  echo -e "${BGreen}Your build completed successfully in $time! You should run axiom-update && axiom-build weekly to get the latest and greatest updates! ${Color_Off}"
+  echo -e "${Green}To initialize an instance, run axiom-init${Color_Off}"
+  "$NOTIFY_CMD" "Axiom Info" "Build completed successfully!"
 else
-   echo -e "${BRed}Your build failed :( Please take a look at the errors!${Color_Off}"
-   if [[ "$provider" ==  "linode" ]]; then
-        echo -e "${Yellow}This can happen sometimes, if you have a [404] error while using Linode, this is likely because you need to request support for a larger image size${Color_Off}"
-        echo -e "${Yellow}If you are using the default provisioner you need to request an increase to 45GB or higher! ${Color_Off}"
-        echo -e "${Yellow}Please open a Linode support ticket saying 'Hello! I have recently installed the Ax Framework https://github.com/attacksurge/ax and would like to request an image increase to 75GB please for the purposes of bulding the packer image. Thank you have a great day!'${Color_Off}"
-        echo -e "${Yellow}You could try with another provisioner (reconftw is 14 GB in size) ${Color_Off}"
-        echo -e "${Yellow}Use 'axiom-images ls' and delete any image before trying to build again ${Color_Off}"
-   fi
-   echo -e "${Yellow}Verify the account is properly configured and/or try a different region.${Color_Off}"
-   echo -e "${Yellow}For support, take a screenshot of the last 20 lines and open a issue at https://github.com/attacksurge/ax/issues${Color_Off}"
-   echo -e "${Green}Sometimes just running axiom-build again can work, so please try at least once: 'axiom-build', thanks!${Color_Off}"
-   echo -e "${Green}To debug Packer run again with ${Color_Off}[ ${BBlue}axiom-build $provisioner --debug ${Color_Off}]"
-   "$NOTIFY_CMD" "Axiom Info" "Build failed :("
-   exit 1
+  echo -e "${BRed}Your build failed :( Please take a look at the errors!${Color_Off}"
+  if [[ "$provider" == "linode" ]]; then
+    echo -e "${Yellow}This can happen sometimes, if you have a [404] error while using Linode, this is likely because you need to request support for a larger image size${Color_Off}"
+    echo -e "${Yellow}If you are using the default provisioner you need to request an increase to 45GB or higher! ${Color_Off}"
+    echo -e "${Yellow}Please open a Linode support ticket saying 'Hello! I have recently installed the Ax Framework https://github.com/attacksurge/ax and would like to request an image increase to 75GB please for the purposes of bulding the packer image. Thank you have a great day!'${Color_Off}"
+    echo -e "${Yellow}You could try with another provisioner (reconftw is 14 GB in size) ${Color_Off}"
+    echo -e "${Yellow}Use 'axiom-images ls' and delete any image before trying to build again ${Color_Off}"
+  fi
+  echo -e "${Yellow}Verify the account is properly configured and/or try a different region.${Color_Off}"
+  echo -e "${Yellow}For support, take a screenshot of the last 20 lines and open a issue at https://github.com/attacksurge/ax/issues${Color_Off}"
+  echo -e "${Green}Sometimes just running axiom-build again can work, so please try at least once: 'axiom-build', thanks!${Color_Off}"
+  echo -e "${Green}To debug Packer run again with ${Color_Off}[ ${BBlue}axiom-build $provisioner --debug ${Color_Off}]"
+  "$NOTIFY_CMD" "Axiom Info" "Build failed :("
+  exit 1
 fi
 
 ############################################################################################################
 # add data to account.json i.e account_path
 #
-jq '.op="'$op_ssh_password'"' <"$account_path">"$AXIOM_PATH"/tmp.json ; mv "$AXIOM_PATH"/tmp.json "$account_path"
-jq '.imageid="'$snapshot_name'"' <"$account_path">"$AXIOM_PATH"/tmp.json ; mv "$AXIOM_PATH"/tmp.json "$account_path"
-jq '.provisioner="'$provisioner'"' <"$account_path">"$AXIOM_PATH"/tmp.json ; mv "$AXIOM_PATH"/tmp.json "$account_path"
+jq '.op="'$op_ssh_password'"' <"$account_path" >"$AXIOM_PATH"/tmp.json
+mv "$AXIOM_PATH"/tmp.json "$account_path"
+jq '.imageid="'$snapshot_name'"' <"$account_path" >"$AXIOM_PATH"/tmp.json
+mv "$AXIOM_PATH"/tmp.json "$account_path"
+jq '.provisioner="'$provisioner'"' <"$account_path" >"$AXIOM_PATH"/tmp.json
+mv "$AXIOM_PATH"/tmp.json "$account_path"
