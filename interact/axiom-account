@@ -400,6 +400,10 @@ if [ ! -z "$1" ]; then
         bootstrap
       fi
 
+      echo "2nd ACCESS $AWS_ACCESS_KEY_ID"
+      echo "2nd SECRET $AWS_SECRET_ACCESS_KEY"
+      echo "2nd SESSION $AWS_SESSION_TOKEN"
+
       # Check if AWS CLI is authenticated
       if ! aws sts get-caller-identity &>/dev/null; then
         echo -e "${BRed}AWS CLI is not authenticated.${Color_Off} Running bootstrap..."
