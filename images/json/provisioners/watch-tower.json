@@ -19,8 +19,8 @@
         "sudo apt update -qq",
         "DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew dist-upgrade -qq",
 
-        "echo 'Installing ufw fail2ban net-tools zsh jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby-dev grc'",
-        "sudo apt install fail2ban ufw net-tools zsh zsh-syntax-highlighting zsh-autosuggestions jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby-dev grc -y -qq",
+        "echo 'Installing ufw fail2ban net-tools zsh jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby ruby-dev grc gcc make python3-apt bind9 certbot python3-certbot-nginx libssl-dev pkg-config dnsutils whois ca-certificates gnupg nmap'",
+        "sudo apt install fail2ban ufw net-tools zsh zsh-syntax-highlighting zsh-autosuggestions jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby ruby-dev grc gcc make python3-apt bind9 certbot python3-certbot-nginx libssl-dev pkg-config dnsutils whois ca-certificates gnupg nmap -y -qq",
         "ufw allow 22",
         "ufw allow 2266",
         "ufw --force enable",
@@ -63,6 +63,10 @@
         "echo 'Installing Interlace'",
         "git clone https://github.com/codingo/Interlace.git /home/op/recon/interlace && cd /home/op/recon/interlace/ && python3 setup.py install",
 
+        "echo 'Installing Rust'",
+        "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+        "source \"$HOME/.cargo/env\"",
+
         "echo 'Optimizing SSH Connections'",
         "/bin/su -l root -c 'echo \"ClientAliveInterval 60\" | sudo tee -a /etc/ssh/sshd_config'",
         "/bin/su -l root -c 'echo \"ClientAliveCountMax 60\" | sudo tee -a /etc/ssh/sshd_config'",
@@ -99,7 +103,7 @@
         "git clone https://github.com/jim3ma/crunch.git /home/op/recon/crunch",
         "echo 'Installing crunch'",
         "/bin/su -l op -c 'make && sudo make install'",
-
+        π
         "pip3 install dnsgen uro dirsearch",
         "cargo install x8",
         "cargo install ripgen",
