@@ -395,6 +395,10 @@ if [ ! -z "$1" ]; then
         aws configure set aws_access_key "$aws_access_key"
         aws configure set aws_secret_access_key "$aws_secret_access_key"
         aws configure set region "$aws_region"
+
+        export AWS_ACCESS_KEY_ID="$aws_access_key"
+        export AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
+        export AWS_DEFAULT_REGION="$aws_region"
       else
         echo -e "${BRed}No AWS credentials found in axiom.json. Please set them manually.${Color_Off}"
         bootstrap
@@ -405,9 +409,11 @@ if [ ! -z "$1" ]; then
       echo "2nd SESSION $AWS_SESSION_TOKEN"
 
       # Check if AWS CLI is authenticated
-      if ! aws sts get-caller-identity &>/dev/null; then
+      if ! aws sts get-caller-identity --debug &>/dev/null; then
         echo -e "${BRed}AWS CLI is not authenticated.${Color_Off} Running bootstrap..."
-        bootstrap
+        # TODO tobe removed
+        exit 1
+#        bootstrap
       else
         echo -e "${BGreen}AWS CLI is authenticated.${Color_Off}"
       fi
